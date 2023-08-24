@@ -2,7 +2,7 @@
 
 ## Basic Usage
 
-To convert a PDB file into a PDF:
+To convert a PDB file into a grid-based PDF visualization:
 
 python -m src.protein_visualizer --input path/to/your/input.pdb
 

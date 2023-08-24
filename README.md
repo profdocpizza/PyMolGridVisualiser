@@ -1,17 +1,17 @@
-# ProteinViz2PDF
+# PyMolGridVisualizer
 
-A simple Python tool to convert PDB (Protein Data Bank) files into visual PDF representations.
+A Python tool to convert PDB (Protein Data Bank) files into visual PDF representations using grid visualization.
 
 ## Features
 
-- Convert PDB files into PDF
-- User-configurable settings
-- High-quality visualizations
+- Convert PDB files into grid-based PDF visualizations.
+- User-configurable settings.
+- High-quality visual representations.
 
 ## Quick Start
 
-1. Clone this repository: `git clone https://github.com/yourusername/ProteinViz2PDF.git`
-2. Navigate into the project: `cd ProteinViz2PDF`
+1. Clone this repository: `git clone https://github.com/yourusername/PyMolGridVisualizer.git`
+2. Navigate into the project: `cd PyMolGridVisualizer`
 3. Install dependencies: `pip install -r requirements.txt`
 4. Run the script: `python -m src.protein_visualizer --input examples/sample1.pdb`
 
