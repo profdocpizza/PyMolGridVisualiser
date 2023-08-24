@@ -47,13 +47,16 @@ def main():
     if args.output_pdf_name is not None:
         print(f'changing output_directory {SETTINGS["output_pdf_name"]} to {args.output_pdf_name}')
         SETTINGS["output_pdf_name"] = args.output_pdf_name
+    if args.filename_pattern is not None:
+        print(f'changing output_directory {SETTINGS["filename_pattern"]} to {args.filename_pattern}')
+        SETTINGS["filename_pattern"] = args.filename_pattern
 
     # Extracting necessary settings into variables for easier use
     pdb_directory = args.pdb_directory
     output_directory = SETTINGS["output_directory"]
-    filename_pattern = args.filename_pattern
+    filename_pattern = SETTINGS["filename_pattern"]
     num_files = SETTINGS["num_files"]
-    output_pdf_name = args.output_pdf_name
+    output_pdf_name = SETTINGS["output_pdf_name"]
     grid = (SETTINGS["grid"]["columns"], SETTINGS["grid"]["rows"])
     write_filenames = SETTINGS["write_filenames"]
 
