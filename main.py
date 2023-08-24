@@ -23,6 +23,9 @@ cmd.set("antialias", 0)
 cmd.ray(1, 1)  # This sets ray tracing to a very low resolution, effectively turning it off.
 cmd.delete("all")
 
+
+
+
 def process_pdb_file(args):
     pdb_file, temp_directory = args
     base_name = os.path.basename(pdb_file)
