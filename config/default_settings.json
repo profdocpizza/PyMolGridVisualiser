@@ -1,0 +1,23 @@
+{
+    "pymol_settings": {
+        "ray_trace_frames": 0,
+        "ray_shadows": "off",
+        "antialias": 0,
+        "orthoscopic": "on"
+    },
+    "pdf_settings": {
+        "orientation": "L",
+        "unit": "mm",
+        "format": "A4"
+    },
+    "image_dimensions": {
+        "width": 400,
+        "height": 400
+    },
+    "grid": {
+        "columns": 3,
+        "rows": 4
+    },
+    "num_files": 48,
+    "write_filenames": true
+}
