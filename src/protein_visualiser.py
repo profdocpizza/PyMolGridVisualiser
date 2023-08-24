@@ -3,7 +3,6 @@ import random
 from multiprocessing import Pool
 import shutil
 import pymol
-import json
 
     
 # Import helper functions
