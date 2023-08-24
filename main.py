@@ -22,8 +22,8 @@ cmd.set("ray_shadows", "off")
 cmd.set("antialias", 0)
 cmd.ray(1, 1)  # This sets ray tracing to a very low resolution, effectively turning it off.
 cmd.delete("all")
-
-
+ 
+# main code:
 
 
 def process_pdb_file(args):
@@ -33,7 +33,10 @@ def process_pdb_file(args):
     generate_image_from_pdb(pdb_file, image_file)
     return image_file
 
-
+  
+def a():
+    a
+  
 
 def generate_image_from_pdb(pdb_path, output_path):
     cmd.delete("all")
