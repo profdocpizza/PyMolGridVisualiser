@@ -9,11 +9,7 @@ python src/protein_visualiser.py path/to/your/directory/
 
 By default, this will generate a PDF in your current directory.
 
-## Configuration
-
-You can use the default configuration file to adjust various settings. Modify the `config/default_settings.json` to adjust according to your needs.
-
-### Additional Command-line Options
+### Command-line Options
 
 - `--output_directory OUTPUT_DIRECTORY`: Specify the directory where the resulting PDF will be saved.
   
@@ -28,6 +24,11 @@ You can use the default configuration file to adjust various settings. Modify th
 - `--write_filenames`: Add this flag if you want filenames to be included in the PDF.
 
 - `--config CONFIG`: Path to a custom configuration file (by default it uses `config/default_settings.json`).
+
+## Default Configuration
+
+You can modify the default configuration file to adjust various settings. Default settings file is found in `config/default_settings.json`.
+
 
 ## Examples
 

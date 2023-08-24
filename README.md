@@ -29,7 +29,7 @@ To quickly get started with PyMolGridVisualizer:
 
 4. Activate the environment:
     ```
-    conda activate PyMolGridVisualizer
+    conda activate pymolgrid
     ```
 
 5. Run the tool on sample PDB files:
