@@ -15,9 +15,12 @@
         "height": 400
     },
     "grid": {
-        "columns": 3,
-        "rows": 4
+        "columns": 8,
+        "rows": 5
     },
-    "num_files": 48,
-    "write_filenames": true
+    "num_files": 1000,
+    "write_filenames": true,
+    "output_directory":"./outputs",
+    "filename_pattern":"",
+    "output_pdf_name":null
 }
