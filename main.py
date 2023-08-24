@@ -97,6 +97,7 @@ def generate_pdf_for_pages(start, end, image_files, grid, temp_directory, write_
     return temp_pdf_path
 
 
+
 def split_images_for_pages(image_files, grid):
     images_per_page = grid[0] * grid[1]
     num_pages = len(image_files) // images_per_page
