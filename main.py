@@ -31,6 +31,7 @@ def process_pdb_file(args):
     return image_file
 
 
+
 def generate_image_from_pdb(pdb_path, output_path):
     cmd.delete("all")
     cmd.load(pdb_path)
