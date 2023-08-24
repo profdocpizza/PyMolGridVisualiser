@@ -1,32 +1,40 @@
 # PyMolGridVisualizer
 
-A Python tool to convert PDB (Protein Data Bank) files into visual PDF representations using grid visualization.
+PyMolGridVisualizer is a Python tool designed to generate PDF visualizations of PDB files in a grid layout. Utilizing PyMOL, this tool makes it easier to visualize multiple protein structures at once.
 
-## Features
+## Table of Contents
 
-- Convert PDB files into grid-based PDF visualizations.
-- User-configurable settings.
-- High-quality visual representations.
+- [Installation](docs/installation.md)
+- [Usage](docs/usage.md)
+- [FAQ](docs/faq.md)
 
 ## Quick Start
 
-1. Clone this repository: `git clone https://github.com/yourusername/PyMolGridVisualizer.git`
-2. Navigate into the project: `cd PyMolGridVisualizer`
-3. Install dependencies: `pip install -r requirements.txt`
-4. Run the script: `python -m src.protein_visualizer --input examples/sample1.pdb`
+To quickly get started with PyMolGridVisualizer:
 
-For more detailed instructions, see our [installation guidelines](docs/installation.md) and [usage instructions](docs/usage.md).
+1. Clone this repository:
+    ```
+    git clone https://github.com/profdocpizza/PyMolGridVisualizer.git
+    ```
 
-## Documentation
+2. Navigate to the PyMolGridVisualizer directory:
+    ```
+    cd PyMolGridVisualizer
+    ```
 
-- [Installation Guidelines](docs/installation.md)
-- [Usage Instructions & Examples](docs/usage.md)
-- [FAQ](docs/faq.md)
+3. Install the required packages using Anaconda:
+    ```
+    conda env create -f environment.yml
+    ```
 
-## License
+4. Activate the environment:
+    ```
+    conda activate PyMolGridVisualizer
+    ```
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+5. Run the tool on sample PDB files:
+    ```
+    python src/protein_visualiser.py examples/
+    ```
 
-## Contributing
-
-Pull requests are welcome. For major changes, please open an issue first to discuss what you'd like to change.
+For detailed usage instructions, visit the [Usage Guide](docs/usage.md).

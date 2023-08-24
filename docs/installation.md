@@ -12,7 +12,7 @@
 3. Navigate into the project directory: `cd PyMolGridVisualizer`
 4. Install the required Python packages:
     ```
-    pip install -r requirements.txt
+    conda env create -f environment.yml
     ```
 
 That's it! You're now set up and ready to convert PDB files into grid-based PDF visualizations.
