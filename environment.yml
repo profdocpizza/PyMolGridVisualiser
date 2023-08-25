@@ -1,8 +1,8 @@
 name: pymolgrid
 channels:
+  - defaults
   - conda-forge
   - schrodinger
-  - defaults
 dependencies:
   - python=3.8.17
   - fpdf=1.7.2
