@@ -21,7 +21,7 @@ Visualisation PDF file will be saved in `/outputs` directory. If you dont like t
 
 - `--output_pdf_name OUTPUT_PDF_NAME`: Specify the name of the output PDF file.
 
-- `--grid COLUMNS ROWS`: Define the grid layout for the visualizations in the PDF.
+- `--grid COLUMNS ROWS`: Define the grid layout for the visualisations in the PDF.
 
 - `--write_filenames`: Add this flag if you want filenames to be included in the PDF.
 

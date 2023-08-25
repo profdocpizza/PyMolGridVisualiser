@@ -4,6 +4,7 @@
 
 - Python 3.x
 - pip (Python package manager)
+- Anaconda
 
 ## Steps
 
@@ -15,4 +16,4 @@
     conda env create -f environment.yml
     ```
 
-That's it! You're now set up and ready to convert PDB files into grid-based PDF visualizations.
+That's it! You're now set up and ready to convert PDB files into grid-based PDF visualisations.
