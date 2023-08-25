@@ -39,10 +39,20 @@ To quickly get started with PyMolGridVisualizer:
     conda activate pymolgrid
     ```
 
-5. Run the tool on sample PDB files:
+5. Unzip example pdb files:
+    ```
+    unzip examples/pdbs/all_pdbs.zip -d examples/pdbs/
+    ```
+
+6. Run the tool on sample PDB files:
     ```
     python src/protein_visualiser.py examples/
     ```
+7. The output file will be saved in `/outputs` directory as PDF.
 
-
+8. Run the tool on your PDB files with custom settings:
+    ```
+    python src/protein_visualiser.py path/to/your/pdbs --filename_pattern "" --num_files 1000 --grid 8 5 --output_pdf_name "proteases"
+    ```
+    
 For detailed usage instructions, visit the [Usage Guide](docs/usage.md).

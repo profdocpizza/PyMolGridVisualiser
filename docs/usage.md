@@ -2,12 +2,14 @@
 
 ## Basic Usage
 
+You will always need to run this script from PyMolGridVisualizer directory.
+
 To convert a directory containing PDB files into a grid-based PDF visualization:
     ```
     python src/protein_visualiser.py path/to/your/directory/
     ```
 
-By default, this will generate a PDF in your /outputs directory. 
+Visualisation PDF file will be saved in `/outputs` directory. If you dont like the layout, you can play with Command-line Options above.
 
 ### Command-line Options
 
@@ -25,18 +27,6 @@ By default, this will generate a PDF in your /outputs directory.
 
 - `--config CONFIG`: Path to a custom configuration file (by default it uses `config/default_settings.json`).
 
-## Examples
+### Default settings 
 
-Example PDB files are located in the `examples/` directory. You can use these to test the functionality.
-
-First you need to unzip the pdb files:
-    ```
-    unzip examples/pdbs/all_pdbs.zip -d examples/pdbs/
-    ```
-
-Then you can run the visualiser with default settings like:
-    ```
-    python src/protein_visualiser.py examples/pdbs
-    ```
-
-Visualisation PDF file will be saved in `/outputs` directory. If you dont like the layout, you can play with Command-line Options above.
+Default settings are located in `config/default_settings.json` file. Command-line options override the default settings. 

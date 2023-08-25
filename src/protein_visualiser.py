@@ -67,7 +67,7 @@ def main():
 
     # Define the name and path to the output PDF
     if output_pdf_name is not None:
-        output_pdf_path = os.path.join(output_directory, f"{output_pdf_name.strip('.pdf')}.pdf")
+        output_pdf_path = os.path.join(output_directory, f"{output_pdf_name.replace('.pdf','')}.pdf")
     else:
         if filename_pattern == "":
             output_pdf_path = os.path.join(output_directory, f"{path_name}_all.pdf")
@@ -107,7 +107,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-# main("/scratch/deltaProteins/collabFoldResults/outputs", "/home/tadas/bin/ProteinVisualiser/outputs","b3ii",num_files=SETTINGS["num_files"], grid=(SETTINGS["grid"]["columns"], SETTINGS["grid"]["rows"]))
-# main("/scratch/deltaProteins/collabFoldResults/outputs", "/home/tadas/bin/ProteinVisualiser","b3ii",num_files=600,grid=(20, 10)) # grid = (cols,rows)
-# main("/scratch/deltaProteins/downloads", "/home/tadas/bin/ProteinVisualiser","b",num_files=60,grid=(6,4))
