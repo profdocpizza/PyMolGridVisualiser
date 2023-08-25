@@ -3,11 +3,11 @@
 ## Basic Usage
 
 To convert a directory containing PDB files into a grid-based PDF visualization:
+    ```
+    python src/protein_visualiser.py path/to/your/directory/
+    ```
 
-python src/protein_visualiser.py path/to/your/directory/
-
-
-By default, this will generate a PDF in your current directory.
+By default, this will generate a PDF in your /outputs directory. 
 
 ### Command-line Options
 
@@ -25,14 +25,18 @@ By default, this will generate a PDF in your current directory.
 
 - `--config CONFIG`: Path to a custom configuration file (by default it uses `config/default_settings.json`).
 
-## Default Configuration
-
-You can modify the default configuration file to adjust various settings. Default settings file is found in `config/default_settings.json`.
-
-
 ## Examples
 
-Example PDB files are located in the `examples/` directory. You can use these to test the functionality:
+Example PDB files are located in the `examples/` directory. You can use these to test the functionality.
 
-python src/protein_visualiser.py examples/
+First you need to unzip the pdb files:
+    ```
+    unzip examples/pdbs/all_pdbs.zip -d examples/pdbs/
+    ```
 
+Then you can run the visualiser with default settings like:
+    ```
+    python src/protein_visualiser.py examples/pdbs
+    ```
+
+Visualisation PDF file will be saved in `/outputs` directory. If you dont like the layout, you can play with Command-line Options above.
