@@ -2,7 +2,6 @@ import os
 import random
 from multiprocessing import Pool
 import shutil
-import pymol
 
     
 # Import helper functions
@@ -15,15 +14,16 @@ from helpers import (
     wait_until_all_files_are_present,
     remove_files,
     create_arg_parser,
-    load_settings
-    
+    load_settings,
+    check_license_in_directory    
 )
-
-pymol.licensing.check_license_file("./pymolLicenseFile.lic")
-print(pymol.licensing.get_info())
 
 
 def main():
+    # activate pymol license
+    license_info = check_license_in_directory()
+    print(license_info)
+
     parser = create_arg_parser()
     args = parser.parse_args()
     # Load settings from the default or provided JSON config

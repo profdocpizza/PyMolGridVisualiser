@@ -33,24 +33,27 @@ To quickly get started with PyMolGridVisualiser:
     ```
     conda env create -f environment.yml
     ```
+    If this step is taking too long, check `Alternative Installation`` in [Installation Guide](docs/installation.md)
 
 4. Activate the environment:
     ```
     conda activate pymolgrid
     ```
 
-5. Unzip example pdb files:
+5. Get PyMol license file from `https://pymol.org/edu/` and copy it to PyMolGridVisualiser directory. File ends with `.lic`.
+
+6. Unzip example pdb files:
     ```
     unzip examples/pdbs/all_pdbs.zip -d examples/pdbs/
     ```
 
-6. Run the tool on sample PDB files:
+7. Run the tool on sample PDB files:
     ```
     python src/protein_visualiser.py examples/
     ```
-7. The output file will be saved in `/outputs` directory as PDF.
+8. The output file will be saved in `/outputs` directory as PDF.
 
-8. Run the tool on your PDB files with custom settings:
+9. Run the tool on your PDB files with custom settings:
     ```
     python src/protein_visualiser.py path/to/your/pdbs --filename_pattern "" --num_files 1000 --grid 8 5 --output_pdf_name "proteases"
     ```

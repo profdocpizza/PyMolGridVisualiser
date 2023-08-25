@@ -9,7 +9,17 @@ from pymol import cmd
 import json
 import time
 import argparse
+import pymol
 
+def check_license_in_directory():
+    """Search for a .lic file in the current directory and check its license."""
+    license_file = next((file for file in os.listdir() if file.endswith(".lic")), None)
+
+    if license_file:
+        pymol.licensing.check_license_file(license_file)
+        return pymol.licensing.get_info()
+    else:
+        return "No .lic file found in the current directory."
 
 def load_settings(path):
     with open(path, 'r') as f:
