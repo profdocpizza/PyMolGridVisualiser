@@ -40,7 +40,7 @@ To quickly get started with PyMolGridVisualiser:
     conda activate pymolgrid
     ```
 
-5. Get PyMol license file from `https://pymol.org/edu/` and copy it to PyMolGridVisualiser directory. File ends with `.lic`.
+5. Get PyMol license file from [https://pymol.org/edu/](https://pymol.org/edu/) and copy it to PyMolGridVisualiser directory. File ends with `.lic`.
 
 6. Unzip example pdb files:
     ```
