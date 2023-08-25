@@ -1,6 +1,6 @@
 # PyMolGridVisualiser
 
-![Description](./docs/examples_pdbs_Page_13.png)
+![Description](./docs/rainbow_page.png)
 
 PyMolGridVisualiser is a Python tool designed to generate PDF visualisations of PDB files in a grid layout. Utilizing PyMOL, this tool makes it easier to visualise multiple protein structures at once.
 

@@ -8,7 +8,7 @@
         "background_colour":"white",
         "representation": "cartoon",
         "colour":"skyblue",
-        "colour_spectrum": false        
+        "colour_spectrum": true        
     },
     "pdf_settings": {
         "orientation": "L",
@@ -17,8 +17,8 @@
         "font_size_multiplier":1
     },
     "image_dimensions": {
-        "width": 400,
-        "height": 400
+        "width": 800,
+        "height": 800
     },
     "grid": {
         "columns": 8,

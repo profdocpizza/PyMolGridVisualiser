@@ -68,10 +68,10 @@ def generate_image_from_pdb(pdb_path, output_path):
     cmd.bg_color(SETTINGS["pymol_settings"]["background_colour"])
     cmd.hide("all")
     cmd.show(SETTINGS["pymol_settings"]["representation"], "all")
-    cmd.color(SETTINGS["pymol_settings"]["colour"], "all")
     if SETTINGS["pymol_settings"]["colour_spectrum"]:
         cmd.spectrum("count", selection="all")
-
+    else:
+        cmd.color(SETTINGS["pymol_settings"]["colour"], "all")
     # Disable ray tracing for faster rendering
     cmd.png(output_path, width=SETTINGS["image_dimensions"]["width"], height=SETTINGS["image_dimensions"]["height"], ray=0, quiet=1)
     while not os.path.exists(output_path):
