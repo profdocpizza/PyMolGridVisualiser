@@ -29,7 +29,7 @@
     ```
     conda activate pymolgrid
     ```
-6. Install image and pdf processing libraries from conda-forge channel:
+6. Install image and PDF processing libraries from conda-forge channel:
     ```
     conda install -c conda-forge fpdf=1.7.2 pillow=9.4.0 pypdf2=1.26.0
     ```
