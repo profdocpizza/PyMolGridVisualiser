@@ -53,6 +53,7 @@ cmd.set("ray_trace_frames", SETTINGS["pymol_settings"]["ray_trace_frames"])
 cmd.set("ray_shadows", SETTINGS["pymol_settings"]["ray_shadows"])
 cmd.set("antialias", SETTINGS["pymol_settings"]["antialias"])
 cmd.set("orthoscopic", SETTINGS["pymol_settings"]["orthoscopic"])
+cmd.set("ray_trace_mode", SETTINGS["pymol_settings"]["ray_trace_mode"])
 
 def process_pdb_file(args):
     pdb_file, temp_directory = args
@@ -64,10 +65,13 @@ def process_pdb_file(args):
 def generate_image_from_pdb(pdb_path, output_path):
     cmd.delete("all")
     cmd.load(pdb_path,quiet=1)
-    cmd.bg_color("white")
+    cmd.bg_color(SETTINGS["pymol_settings"]["background_colour"])
     cmd.hide("all")
-    cmd.show("cartoon", "all")
-    cmd.color("skyblue", "all")
+    cmd.show(SETTINGS["pymol_settings"]["representation"], "all")
+    cmd.color(SETTINGS["pymol_settings"]["colour"], "all")
+    if SETTINGS["pymol_settings"]["colour_spectrum"]:
+        cmd.spectrum("count", selection="all")
+
     # Disable ray tracing for faster rendering
     cmd.png(output_path, width=SETTINGS["image_dimensions"]["width"], height=SETTINGS["image_dimensions"]["height"], ray=0, quiet=1)
     while not os.path.exists(output_path):
@@ -86,7 +90,7 @@ def generate_pdf_for_pages(start, end, image_files, grid, temp_directory, write_
     images_count = 0
 
     # Calculate the font size based on cell width and clamp between min and max sizes
-    font_size = cell_width * 0.12  # Setting font size proportional to cell width
+    font_size = cell_width * 0.15 * SETTINGS["pdf_settings"]["font_size_multiplier"] # Setting font size proportional to cell width
     font_size = max(2, min(font_size, 14))  # Clamping between 4 and 10
 
     # Set font and determine base height

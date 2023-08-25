@@ -3,12 +3,18 @@
         "ray_trace_frames": 0,
         "ray_shadows": "off",
         "antialias": 0,
-        "orthoscopic": "on"
+        "orthoscopic": "on",
+        "ray_trace_mode":0,
+        "background_colour":"white",
+        "representation": "cartoon",
+        "colour":"skyblue",
+        "colour_spectrum": false        
     },
     "pdf_settings": {
         "orientation": "L",
         "unit": "mm",
-        "format": "A4"
+        "format": "A4",
+        "font_size_multiplier":1
     },
     "image_dimensions": {
         "width": 400,
