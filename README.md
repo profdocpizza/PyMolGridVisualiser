@@ -33,7 +33,7 @@ To quickly get started with PyMolGridVisualiser:
     ```
     conda env create -f environment.yml
     ```
-    If this step is taking too long, check `Alternative Installation`` in [Installation Guide](docs/installation.md)
+    If this step is taking too long, check `Alternative Installation` in [Installation Guide](docs/installation.md)
 
 4. Activate the environment:
     ```
