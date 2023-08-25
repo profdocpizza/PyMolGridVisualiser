@@ -17,8 +17,8 @@
         "font_size_multiplier":1
     },
     "image_dimensions": {
-        "width": 800,
-        "height": 800
+        "width": 500,
+        "height": 500
     },
     "grid": {
         "columns": 8,
