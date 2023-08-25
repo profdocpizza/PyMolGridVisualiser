@@ -8,8 +8,8 @@
 ## Steps
 
 1. Ensure you have Python and pip installed on your system.
-2. Clone this repository: `git clone https://github.com/yourusername/PyMolGridVisualizer.git`
-3. Navigate into the project directory: `cd PyMolGridVisualizer`
+2. Clone this repository: `git clone https://github.com/yourusername/PyMolGridVisualiser.git`
+3. Navigate into the project directory: `cd PyMolGridVisualiser`
 4. Install the required Python packages:
     ```
     conda env create -f environment.yml

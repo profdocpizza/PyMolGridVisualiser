@@ -2,7 +2,7 @@
 
 ## Basic Usage
 
-You will always need to run this script from PyMolGridVisualizer directory.
+You will always need to run this script from PyMolGridVisualiser directory.
 
 To convert a directory containing PDB files into a grid-based PDF visualization:
     ```
