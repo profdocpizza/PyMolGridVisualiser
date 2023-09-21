@@ -1,0 +1,21 @@
+# Example pdb_paths.txt
+
+# This file lists the full paths to individual PDB files.
+# Each line represents a path to a PDB file.
+# You can use absolute paths or relative paths.
+
+# Example:
+# /path/to/directory/containing/protein1.pdb
+# /path/to/directory/containing/protein2.pdb
+# ./relative_path/protein3.pdb
+
+# Note:
+# - Lines starting with a '#' are comments and will be ignored.
+# - Empty lines will be ignored.
+# - Ensure that each path is correct and points to a valid .pdb file.
+
+# Actual paths start here:
+
+/path/to/your/first/protein.pdb
+/path/to/your/second/protein.pdb
+./some/relative/path/third/protein.pdb

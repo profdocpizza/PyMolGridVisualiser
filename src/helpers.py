@@ -29,7 +29,8 @@ def create_arg_parser():
     parser = argparse.ArgumentParser(description="A protein visualizer tool that generates PDFs from PDB files.")
 
     # Required arguments
-    parser.add_argument("pdb_directory", type=str, help="Path to the directory containing PDB files.")
+    # parser.add_argument("pdb_directory", type=str, help="Path to the directory containing PDB files.")
+    parser.add_argument("input_path", type=str, help="Path to the directory containing PDB files or to a .txt file with paths to PDBs.")
     
     # Optional arguments
     parser.add_argument("--output_directory", type=str, default=None, help="Path to the directory where the output PDF will be saved.")
@@ -166,10 +167,49 @@ def remove_files(paths):
     # Cleanup temporary files
     for path in paths:
         os.remove(path)
-    
+        
+def get_pdb_paths_from_file(file_path):
+    """
+    Extracts and validates PDB paths from a provided .txt file.
+
+    Args:
+    - file_path (str): Path to the .txt file containing paths to PDBs.
+
+    Returns:
+    - List[str]: List of validated PDB paths.
+
+    Raises:
+    - FileNotFoundError: If the provided file does not exist.
+    - ValueError: If a line in the file doesn't point to an existing PDB file.
+    """
+
+    # Check if the provided file exists
+    if not os.path.exists(file_path):
+        raise FileNotFoundError(f"The provided file {file_path} does not exist.")
+
+    pdb_paths = []
+
+    # Read the file and extract PDB paths
+    with open(file_path, 'r') as file:
+        for line in file:
+            if line.startswith("#"):
+                continue
+            line = line.strip()  # Remove whitespace and newline characters
+            if line:  # Ensure the line is not empty
+                # Validate if it's a valid path and points to a .pdb file
+                if not os.path.exists(line):
+                    raise ValueError(f"The path {line} mentioned in the file does not exist.")
+                elif not line.lower().endswith('.pdb'):
+                    raise ValueError(f"The path {line} does not point to a .pdb file.")
+                else:
+                    pdb_paths.append(line)
+
+    return pdb_paths
+
 def list_pdb_files_in_directory(directory, filename_pattern=""):
     """Returns all pdb files in a given directory matching the filename_pattern."""
-    return [os.path.join(directory, entry.name) for entry in os.scandir(directory) if entry.name.endswith('.pdb') and filename_pattern in os.path.splitext(entry.name)[0]]
+    # return [os.path.join(directory, entry.name) for entry in os.scandir(directory) if entry.name.endswith('.pdb') and filename_pattern in os.path.splitext(entry.name)[0]]
+    return [os.path.join(directory, entry.name) for entry in os.scandir(directory) if entry.name.endswith('.pdb')]
 
 def list_all_pdb_files(root_dir, filename_pattern=""):
     directories = []

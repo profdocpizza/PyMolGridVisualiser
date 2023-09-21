@@ -15,7 +15,8 @@ from helpers import (
     remove_files,
     create_arg_parser,
     load_settings,
-    check_license_in_directory    
+    check_license_in_directory,
+    get_pdb_paths_from_file 
 )
 
 
@@ -26,6 +27,7 @@ def main():
 
     parser = create_arg_parser()
     args = parser.parse_args()
+
     # Load settings from the default or provided JSON config
     SETTINGS = load_settings(args.config)
     if args.grid:
@@ -34,9 +36,6 @@ def main():
     if args.num_files is not None:
         print(f'changing num_files {SETTINGS["num_files"]} to {args.num_files}')
         SETTINGS["num_files"] = args.num_files
-    if args.write_filenames is not None:
-        print(f'changing  write_filenames{SETTINGS["write_filenames"]} to {args.write_filenames}')
-        SETTINGS["write_filenames"] = args.write_filenames
     if args.write_filenames is not None:
         print(f'changing  write_filenames{SETTINGS["write_filenames"]} to {args.write_filenames}')
         SETTINGS["write_filenames"] = args.write_filenames
@@ -51,7 +50,6 @@ def main():
         SETTINGS["filename_pattern"] = args.filename_pattern
 
     # Extracting necessary settings into variables for easier use
-    pdb_directory = args.pdb_directory
     output_directory = SETTINGS["output_directory"]
     filename_pattern = SETTINGS["filename_pattern"]
     num_files = SETTINGS["num_files"]
@@ -59,8 +57,22 @@ def main():
     grid = (SETTINGS["grid"]["columns"], SETTINGS["grid"]["rows"])
     write_filenames = SETTINGS["write_filenames"]
 
+    # Determine if the input_path is a directory or a .txt file
+    if os.path.isdir(args.input_path):
+        print(f"Filtering .pdb files that contain '{filename_pattern}' in provided directory '{args.input_path}'")
+        # Filter pdbs from given directory. look deeply
+        all_files = list_all_pdb_files(args.input_path)
+    elif args.input_path.endswith(".txt"):
+        print(f"Getting .pdb files that contain '{filename_pattern}' in provided txt file '{args.input_path}'")
+        all_files = get_pdb_paths_from_file(args.input_path)
+    else:
+        parser.error("The provided input_path is neither a directory nor a .txt file. For example, use 'PATH/TO/YOUR/PDBS' or PATH/TO/YOUR/PATH_LIST.txt ")
+
+
+
+
     # Create temporary directory for the images and PDF
-    path_name = pdb_directory.replace('/','_').strip('_')
+    path_name = args.input_path.replace('/','_').replace('.txt','').strip('_')
     temp_directory = rf"{output_directory}/{path_name}_containing_{filename_pattern}"
     if not os.path.exists(temp_directory):
         os.mkdir(temp_directory)
@@ -74,13 +86,11 @@ def main():
         else:
             output_pdf_path = os.path.join(output_directory, f"{path_name}_containing_{filename_pattern}.pdf")
 
-    # Filter pdbs from given directory. look deeply
-    print(f"Filtering .pdb files that contain '{filename_pattern}'")
-    all_files = list_all_pdb_files(pdb_directory, filename_pattern)
+    
     print(f"Found {len(all_files)} .pdb files containing '{filename_pattern}'")
     matching_files = [f for f in all_files if filename_pattern in os.path.basename(f)]
     if len(matching_files)<1:
-        raise ValueError(f"No PDB files found matching pattern: '{filename_pattern}' in the pdb_directory: '{pdb_directory}'")
+        raise ValueError(f"No PDB files found matching pattern: '{filename_pattern}' in '{args.input_path}'")
 
     # Select files at random
     selected_files = random.sample(matching_files, min(num_files, len(matching_files)))
