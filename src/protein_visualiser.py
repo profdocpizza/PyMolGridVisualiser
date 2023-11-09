@@ -27,7 +27,13 @@ def main():
 
     parser = create_arg_parser()
     args = parser.parse_args()
-
+    
+    # If the script is run without specifying a config, use the default settings
+    if args.config is None:
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        print(script_dir)
+        args.config = os.path.join(script_dir, 'config', 'default_settings.json')
+    
     # Load settings from the default or provided JSON config
     SETTINGS = load_settings(args.config)
     if args.grid:
@@ -100,7 +106,7 @@ def main():
     # Create and save the images
     print(f"Generating {len(selected_files)} images with pymol")
     with Pool() as pool:
-        image_paths = pool.map(process_pdb_file, [(pdb, temp_directory) for pdb in selected_files])
+        image_paths = pool.starmap(process_pdb_file, [(pdb_file, temp_directory, SETTINGS) for pdb_file in selected_files])
 
     # Check if all images are present
     wait_until_all_files_are_present(image_paths)
@@ -108,7 +114,7 @@ def main():
     print("Creating PDF pages...")
     image_splits = split_images_for_pages(image_paths, grid)
     with Pool() as pool:
-        temp_pdf_paths = pool.starmap(generate_pdf_for_pages, [(start, end, image_subset, grid, temp_directory, write_filenames) for start, end, image_subset in image_splits])
+        temp_pdf_paths = pool.starmap(generate_pdf_for_pages, [(start, end, image_subset, grid, temp_directory, SETTINGS, write_filenames) for start, end, image_subset in image_splits])
     
     print("Assembling PDF...")
     merge_temp_pdfs(temp_pdf_paths, output_pdf_path)

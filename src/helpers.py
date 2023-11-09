@@ -11,15 +11,21 @@ import time
 import argparse
 import pymol
 
-def check_license_in_directory():
-    """Search for a .lic file in the current directory and check its license."""
-    license_file = next((file for file in os.listdir() if file.endswith(".lic")), None)
+# Calculate the script directory once at the module level
+script_directory = os.path.dirname(os.path.abspath(__file__))
 
-    if license_file:
-        pymol.licensing.check_license_file(license_file)
-        return pymol.licensing.get_info()
-    else:
-        return "No .lic file found in the current directory."
+
+def check_license_in_directory():
+    """Search for a .lic file starting one directory up from the helpers.py directory and scanning all subdirectories."""
+    start_directory = os.path.abspath(os.path.join(script_directory, os.pardir))
+    for root, dirs, files in os.walk(start_directory):
+        for file in files:
+            if file.endswith(".lic"):
+                license_file_path = os.path.join(root, file)
+                print(f"Found pymol license at {license_file_path}")
+                pymol.licensing.check_license_file(license_file_path)
+                return pymol.licensing.get_info()
+    return "No .lic file found in the parent directory or its subdirectories."
 
 def load_settings(path):
     with open(path, 'r') as f:
@@ -27,6 +33,9 @@ def load_settings(path):
 
 def create_arg_parser():
     parser = argparse.ArgumentParser(description="A protein visualizer tool that generates PDFs from PDB files.")
+    
+    # Set the default config path to be relative to the helpers.py location
+    default_config_path = os.path.join(os.path.join(script_directory, os.pardir), 'config', 'default_settings.json')
 
     # Required arguments
     # parser.add_argument("pdb_directory", type=str, help="Path to the directory containing PDB files.")
@@ -39,31 +48,18 @@ def create_arg_parser():
     parser.add_argument("--output_pdf_name", type=str, default=None, help="Custom name for the output PDF.")
     parser.add_argument("--grid", type=int, nargs=2, default=None, metavar=("COLUMNS", "ROWS"), help="Grid dimensions for arranging images in the PDF.")
     parser.add_argument("--write_filenames", action="store_true", default=None, help="Include the filenames in the output PDF.")
-    parser.add_argument("--config", type=str, default="config/default_settings.json", help="Path to custom configuration settings in JSON format.")
+    parser.add_argument("--config", type=str, default=default_config_path, help="Path to custom configuration settings in JSON format.")
     
     return parser
 
 
-
-parser = create_arg_parser()
-args = parser.parse_args()
-
-SETTINGS = load_settings(args.config)
-
-cmd.set("ray_trace_frames", SETTINGS["pymol_settings"]["ray_trace_frames"])
-cmd.set("ray_shadows", SETTINGS["pymol_settings"]["ray_shadows"])
-cmd.set("antialias", SETTINGS["pymol_settings"]["antialias"])
-cmd.set("orthoscopic", SETTINGS["pymol_settings"]["orthoscopic"])
-cmd.set("ray_trace_mode", SETTINGS["pymol_settings"]["ray_trace_mode"])
-
-def process_pdb_file(args):
-    pdb_file, temp_directory = args
+def process_pdb_file( pdb_file, temp_directory, SETTINGS):
     base_name = os.path.basename(pdb_file)
     image_file = os.path.join(temp_directory, os.path.splitext(base_name)[0] + ".png")
-    generate_image_from_pdb(pdb_file, image_file)
+    generate_image_from_pdb(pdb_file, image_file, SETTINGS) 
     return image_file
 
-def generate_image_from_pdb(pdb_path, output_path):
+def generate_image_from_pdb(pdb_path, output_path, SETTINGS):
     cmd.delete("all")
     cmd.load(pdb_path,quiet=1)
     cmd.bg_color(SETTINGS["pymol_settings"]["background_colour"])
@@ -80,7 +76,7 @@ def generate_image_from_pdb(pdb_path, output_path):
     cmd.delete("all")
 
 
-def generate_pdf_for_pages(start, end, image_files, grid, temp_directory, write_filenames=False):
+def generate_pdf_for_pages(start, end, image_files, grid, temp_directory, SETTINGS, write_filenames=False):
     # pdf = FPDF(orientation="L", unit="mm", format="A4")
     pdf = FPDF(orientation=SETTINGS["pdf_settings"]["orientation"], 
             unit=SETTINGS["pdf_settings"]["unit"], 
@@ -232,3 +228,19 @@ def wait_until_all_files_are_present(paths):
         else:
             print("Waiting for all image files to be present...")
             time.sleep(0.1)
+
+
+def main():
+    parser = create_arg_parser()
+    args = parser.parse_args()
+
+    SETTINGS = load_settings(args.config)
+
+    cmd.set("ray_trace_frames", SETTINGS["pymol_settings"]["ray_trace_frames"])
+    cmd.set("ray_shadows", SETTINGS["pymol_settings"]["ray_shadows"])
+    cmd.set("antialias", SETTINGS["pymol_settings"]["antialias"])
+    cmd.set("orthoscopic", SETTINGS["pymol_settings"]["orthoscopic"])
+    cmd.set("ray_trace_mode", SETTINGS["pymol_settings"]["ray_trace_mode"])
+
+if __name__ == '__main__':
+    main()
