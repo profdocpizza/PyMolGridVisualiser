@@ -29,11 +29,12 @@ To quickly get started with PyMolGridVisualiser:
     cd PyMolGridVisualiser
     ```
 
-3. Install the required packages using Anaconda:
+3. Install the required packages using Anaconda:<br>
+*(If this step is taking too long, check `Alternative Installation` in [Installation Guide](docs/installation.md))*
     ```
     conda env create -f environment.yml
     ```
-    If this step is taking too long, check `Alternative Installation` in [Installation Guide](docs/installation.md)
+
 
 4. Activate the environment:
     ```
@@ -51,11 +52,11 @@ To quickly get started with PyMolGridVisualiser:
     ```
     python src/protein_visualiser.py examples/
     ```
-8. The output file will be saved in `/outputs` directory as PDF.
+8. The PDF output file will be saved in `/outputs` directory by default.
 
 9. Run the tool on your PDB files with custom settings:
-    ```
-    python src/protein_visualiser.py PATH/TO/YOUR/PDBS --filename_pattern "STRING_TO_LOOK_FOR" --num_files 1000 --grid 8 5 --output_pdf_name "YOUR_DESIRED_PDF_NAME"
+    ```bash
+    python src/protein_visualiser.py --input_folder "PATH/TO/YOUR/PDBS/DIRECTORY/" --filename_pattern "STRING_TO_LOOK_FOR" --num_files 1000 --grid 8 5 --output_pdf_name "YOUR_DESIRED_PDF_NAME"
     ```
 
     

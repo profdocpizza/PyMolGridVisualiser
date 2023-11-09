@@ -4,12 +4,11 @@ import functools
 from PIL import Image
 from fpdf import FPDF
 from PyPDF2 import PdfFileMerger
-# import pymol
-from pymol import cmd
 import json
 import time
 import argparse
 import pymol
+from pymol import cmd
 
 # Calculate the script directory once at the module level
 script_directory = os.path.dirname(os.path.abspath(__file__))
@@ -34,20 +33,23 @@ def load_settings(path):
 def create_arg_parser():
     parser = argparse.ArgumentParser(description="A protein visualizer tool that generates PDFs from PDB files.")
     
-    # Set the default config path to be relative to the helpers.py location
-    default_config_path = os.path.join(os.path.join(script_directory, os.pardir), 'config', 'default_settings.json')
+    # Create a mutually exclusive group for --input_folder and --input_txt
+    input_group = parser.add_mutually_exclusive_group(required=True)
+    input_group.add_argument("--input_folder", type=str, help="Path to the parent folder containing PDB files.")
+    input_group.add_argument("--input_txt", type=str, help="Path to a .txt file with paths to PDBs.")
 
-    # Required arguments
-    # parser.add_argument("pdb_directory", type=str, help="Path to the directory containing PDB files.")
-    parser.add_argument("input_path", type=str, help="Path to the directory containing PDB files or to a .txt file with paths to PDBs.")
-    
+
     # Optional arguments
-    parser.add_argument("--output_directory", type=str, default=None, help="Path to the directory where the output PDF will be saved.")
     parser.add_argument("--filename_pattern", type=str, default=None, help="Pattern to match specific PDB files.")
     parser.add_argument("--num_files", type=int, default=None, help="Number of PDB files to visualize.")
     parser.add_argument("--output_pdf_name", type=str, default=None, help="Custom name for the output PDF.")
     parser.add_argument("--grid", type=int, nargs=2, default=None, metavar=("COLUMNS", "ROWS"), help="Grid dimensions for arranging images in the PDF.")
     parser.add_argument("--write_filenames", action="store_true", default=None, help="Include the filenames in the output PDF.")
+    parser.add_argument("--sort_pdbs_in_pdf", action='store_true', default=None, help="Sort PDB files alphabetically before adding to the PDF.")
+
+    default_output_directory = os.path.join(os.path.join(script_directory, os.pardir), 'outputs')
+    parser.add_argument("--output_directory", type=str, default=default_output_directory, help="Path to the directory where the output PDF will be saved.")
+    default_config_path = os.path.join(os.path.join(script_directory, os.pardir), 'config', 'default_settings.json')
     parser.add_argument("--config", type=str, default=default_config_path, help="Path to custom configuration settings in JSON format.")
     
     return parser
@@ -76,8 +78,8 @@ def generate_image_from_pdb(pdb_path, output_path, SETTINGS):
     cmd.delete("all")
 
 
-def generate_pdf_for_pages(start, end, image_files, grid, temp_directory, SETTINGS, write_filenames=False):
-    # pdf = FPDF(orientation="L", unit="mm", format="A4")
+def generate_pdf_for_pages(start, end, image_files, temp_directory, SETTINGS):
+    grid = (SETTINGS["grid"]["columns"], SETTINGS["grid"]["rows"])
     pdf = FPDF(orientation=SETTINGS["pdf_settings"]["orientation"], 
             unit=SETTINGS["pdf_settings"]["unit"], 
             format=SETTINGS["pdf_settings"]["format"])
@@ -116,7 +118,7 @@ def generate_pdf_for_pages(start, end, image_files, grid, temp_directory, SETTIN
         pdf.image(image_path, x, y, new_width, new_height)
 
         # If write_filenames is True, write the image filename within the image boundaries at the bottom.
-        if write_filenames:
+        if SETTINGS["write_filenames"]:
             filename_line_spacing = base_height / 1  # Adjust the filename_space dynamically based on the base_height
             filename = os.path.splitext(os.path.basename(image_path))[0]
             text_y = y + new_height - filename_line_spacing
@@ -229,7 +231,22 @@ def wait_until_all_files_are_present(paths):
             print("Waiting for all image files to be present...")
             time.sleep(0.1)
 
-
+def create_unique_temp_directory(output_directory, path_name, filename_pattern):
+    # Create a unique identifier for the temporary directory
+    timestamp = time.strftime("%Y%m%d-%H%M%S")
+    
+    # Create temporary directory name
+    temp_directory_name = f"{path_name}_containing_{filename_pattern}_{timestamp}"
+    temp_directory = os.path.join(output_directory, temp_directory_name)
+    
+    # Ensure the directory does not exist and then create it
+    if not os.path.exists(temp_directory):
+        os.makedirs(temp_directory)
+        return temp_directory
+    else:
+        # Raise an error if the directory already exists
+        raise FileExistsError(f"The directory {temp_directory} already exists. Please remove it manually or run the script again.")
+    
 def main():
     parser = create_arg_parser()
     args = parser.parse_args()

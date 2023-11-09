@@ -17,8 +17,8 @@
         "font_size_multiplier":1
     },
     "image_dimensions": {
-        "width": 400,
-        "height": 400
+        "width": 500,
+        "height": 500
     },
     "grid": {
         "columns": 8,
@@ -28,5 +28,6 @@
     "write_filenames": true,
     "output_directory":"./outputs",
     "filename_pattern":"",
-    "output_pdf_name":null
+    "output_pdf_name":null,
+    "sort_pdbs_in_pdf":false
 }

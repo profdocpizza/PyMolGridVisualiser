@@ -2,9 +2,7 @@ import os
 import random
 from multiprocessing import Pool
 import shutil
-
-    
-# Import helper functions
+import time
 from helpers import (
     process_pdb_file,
     generate_pdf_for_pages,
@@ -12,11 +10,11 @@ from helpers import (
     merge_temp_pdfs,
     list_all_pdb_files,
     wait_until_all_files_are_present,
-    remove_files,
     create_arg_parser,
     load_settings,
     check_license_in_directory,
-    get_pdb_paths_from_file 
+    get_pdb_paths_from_file,
+    create_unique_temp_directory,
 )
 
 
@@ -33,9 +31,12 @@ def main():
         script_dir = os.path.dirname(os.path.abspath(__file__))
         print(script_dir)
         args.config = os.path.join(script_dir, 'config', 'default_settings.json')
-    
+
+
     # Load settings from the default or provided JSON config
     SETTINGS = load_settings(args.config)
+
+    # Adjust default SETTINGS only if parameters were passed
     if args.grid:
         print(f'changing grid {SETTINGS["grid"]["columns"], SETTINGS["grid"]["rows"]} to {args.grid}')
         SETTINGS["grid"]["columns"], SETTINGS["grid"]["rows"] = args.grid
@@ -49,61 +50,54 @@ def main():
         print(f'changing output_directory {SETTINGS["output_directory"]} to {args.output_directory}')
         SETTINGS["output_directory"] = args.output_directory
     if args.output_pdf_name is not None:
-        print(f'changing output_directory {SETTINGS["output_pdf_name"]} to {args.output_pdf_name}')
+        print(f'changing output_pdf_name {SETTINGS["output_pdf_name"]} to {args.output_pdf_name}')
         SETTINGS["output_pdf_name"] = args.output_pdf_name
     if args.filename_pattern is not None:
-        print(f'changing output_directory {SETTINGS["filename_pattern"]} to {args.filename_pattern}')
+        print(f'changing filename_pattern {SETTINGS["filename_pattern"]} to {args.filename_pattern}')
         SETTINGS["filename_pattern"] = args.filename_pattern
+    if args.sort_pdbs_in_pdf is not None:
+        print(f'changing sort_pdbs_in_pdf {SETTINGS["sort_pdbs_in_pdf"]} to {args.sort_pdbs_in_pdf}')
+        SETTINGS["sort_pdbs_in_pdf"] = args.sort_pdbs_in_pdf
 
-    # Extracting necessary settings into variables for easier use
-    output_directory = SETTINGS["output_directory"]
-    filename_pattern = SETTINGS["filename_pattern"]
-    num_files = SETTINGS["num_files"]
-    output_pdf_name = SETTINGS["output_pdf_name"]
-    grid = (SETTINGS["grid"]["columns"], SETTINGS["grid"]["rows"])
-    write_filenames = SETTINGS["write_filenames"]
+    # Check if the input was provided as a folder
+    if args.input_folder:
+        print(f"Processing PDB files in folder: {args.input_folder}")
+        # Handle the folder input
+        all_files = list_all_pdb_files(args.input_folder, SETTINGS["filename_pattern"])
+        path_name = os.path.basename(args.input_folder).replace('/', '_').strip('_')
 
-    # Determine if the input_path is a directory or a .txt file
-    if os.path.isdir(args.input_path):
-        print(f"Filtering .pdb files that contain '{filename_pattern}' in provided directory '{args.input_path}'")
-        # Filter pdbs from given directory. look deeply
-        all_files = list_all_pdb_files(args.input_path)
-    elif args.input_path.endswith(".txt"):
-        print(f"Getting .pdb files that contain '{filename_pattern}' in provided txt file '{args.input_path}'")
-        all_files = get_pdb_paths_from_file(args.input_path)
-    else:
-        parser.error("The provided input_path is neither a directory nor a .txt file. For example, use 'PATH/TO/YOUR/PDBS' or PATH/TO/YOUR/PATH_LIST.txt ")
+    # Check if the input was provided as a text file
+    elif args.input_txt:
+        print(f"Processing PDB files listed in: {args.input_txt}")
+        all_files = get_pdb_paths_from_file(args.input_txt)
+        path_name = os.path.basename(args.input_txt).replace('/', '_').replace('.txt', '').strip('_')
 
 
-
-
-    # Create temporary directory for the images and PDF
-    path_name = args.input_path.replace('/','_').replace('.txt','').strip('_')
-    temp_directory = rf"{output_directory}/{path_name}_containing_{filename_pattern}"
-    if not os.path.exists(temp_directory):
-        os.mkdir(temp_directory)
+    # Create a unique temporary directory
+    temp_directory = create_unique_temp_directory(SETTINGS["output_directory"], path_name, SETTINGS["filename_pattern"])
 
     # Define the name and path to the output PDF
-    if output_pdf_name is not None:
-        output_pdf_path = os.path.join(output_directory, f"{output_pdf_name.replace('.pdf','')}.pdf")
+    if SETTINGS["output_pdf_name"] is not None:
+        output_pdf_path = os.path.join(SETTINGS["output_directory"], f"{SETTINGS['output_pdf_name'].replace('.pdf','')}.pdf")
     else:
-        if filename_pattern == "":
-            output_pdf_path = os.path.join(output_directory, f"{path_name}_all.pdf")
+        if SETTINGS["filename_pattern"] == "":
+            output_pdf_path = os.path.join(SETTINGS["output_directory"], f"{path_name}_all.pdf")
         else:
-            output_pdf_path = os.path.join(output_directory, f"{path_name}_containing_{filename_pattern}.pdf")
-
-    
-    print(f"Found {len(all_files)} .pdb files containing '{filename_pattern}'")
-    matching_files = [f for f in all_files if filename_pattern in os.path.basename(f)]
+            output_pdf_path = os.path.join(SETTINGS["output_directory"], f"{path_name}_containing_{SETTINGS['filename_pattern']}.pdf")
+            
+    print(f"Found {len(all_files)} .pdb files containing '{SETTINGS['filename_pattern']}'")
+    matching_files = [f for f in all_files if SETTINGS["filename_pattern"] in os.path.basename(f)]
     if len(matching_files)<1:
-        raise ValueError(f"No PDB files found matching pattern: '{filename_pattern}' in '{args.input_path}'")
+        raise ValueError(f"No PDB files found matching pattern: '{SETTINGS['filename_pattern']}' in '{args.input_folder or args.input_txt}'")
 
     # Select files at random
-    selected_files = random.sample(matching_files, min(num_files, len(matching_files)))
-    selected_files = sorted(selected_files)
+    selected_files = random.sample(matching_files, min(SETTINGS["num_files"], len(matching_files)))
     print(f"Selected {len(selected_files)} files at random")
+
+    if SETTINGS["sort_pdbs_in_pdf"]:
+        selected_files = sorted(selected_files)
     
-    # Create and save the images
+    # Create and save the images with multiprocessing
     print(f"Generating {len(selected_files)} images with pymol")
     with Pool() as pool:
         image_paths = pool.starmap(process_pdb_file, [(pdb_file, temp_directory, SETTINGS) for pdb_file in selected_files])
@@ -111,14 +105,17 @@ def main():
     # Check if all images are present
     wait_until_all_files_are_present(image_paths)
 
+    # Create and save the PDF pages 
     print("Creating PDF pages...")
-    image_splits = split_images_for_pages(image_paths, grid)
+    image_splits = split_images_for_pages(image_paths, (SETTINGS["grid"]["columns"], SETTINGS["grid"]["rows"]))
     with Pool() as pool:
-        temp_pdf_paths = pool.starmap(generate_pdf_for_pages, [(start, end, image_subset, grid, temp_directory, SETTINGS, write_filenames) for start, end, image_subset in image_splits])
+        temp_pdf_paths = pool.starmap(generate_pdf_for_pages, [(start, end, image_subset, temp_directory, SETTINGS) for start, end, image_subset in image_splits])
     
+    # Assemble PDF pages to a multi-page PDF
     print("Assembling PDF...")
     merge_temp_pdfs(temp_pdf_paths, output_pdf_path)
 
+    # Remove temporaty directory with all images and pdf pages.
     shutil.rmtree(temp_directory)
 
 if __name__ == "__main__":
