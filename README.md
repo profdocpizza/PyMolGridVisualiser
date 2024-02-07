@@ -56,8 +56,7 @@ To quickly get started with PyMolGridVisualiser:
 
 9. Run the tool on your PDB files with custom settings:
     ```bash
-    python src/protein_visualiser.py --input_folder "PATH/TO/YOUR/PDBS/DIRECTORY/" --filename_pattern "STRING_TO_LOOK_FOR" --num_files 1000 --grid 8 5 --output_pdf_name "YOUR_DESIRED_PDF_NAME"
+    python src/protein_visualiser.py --input_folder "PATH/TO/YOUR/PDBS/DIRECTORY/" --filename_pattern "STRING_TO_LOOK_FOR" --num_files 1000 --grid 8 5 --output_pdf_name "YOUR_DESIRED_PDF_NAME" --output_directory "PATH/TO/OUTPUT/DIRECTORY"
     ```
 
-    
 For detailed usage instructions, visit the [Usage Guide](docs/usage.md).
