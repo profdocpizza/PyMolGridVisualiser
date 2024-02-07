@@ -36,3 +36,10 @@ Visualisation PDF file will be saved in `/outputs` directory. If you dont like t
 
 ## Default settings 
 Default settings are located in the [`config/default_settings.json`](config/default_settings.json) file. Command-line options override the default settings.
+
+## Custom PyMol scripting
+If default settings in the [`config/default_settings.json`](config/default_settings.json) does not provide required flexibility, go and modify [`pdb_to_png.py`](src/pdb_to_png.py). 
+
+- You need to modify `generate_image_from_pdb()` function by replacing `default_pymol_script()` with `your_custom_pymol_script()`.
+
+- There is an optional `cofactor_binder_pymol_script()` function as an example. It can be used instead `default_pymol_script()`.

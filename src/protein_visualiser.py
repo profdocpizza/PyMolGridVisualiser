@@ -16,6 +16,8 @@ from helpers import (
     get_pdb_paths_from_file,
     create_unique_temp_directory,
 )
+from pdb_to_png import configure_pymol_cmd
+
 
 
 def main():
@@ -36,6 +38,8 @@ def main():
     # Load settings from the default or provided JSON config
     SETTINGS = load_settings(args.config)
 
+    configure_pymol_cmd(SETTINGS)
+
     # Adjust default SETTINGS only if parameters were passed
     if args.grid:
         print(f'changing grid {SETTINGS["grid"]["columns"], SETTINGS["grid"]["rows"]} to {args.grid}')
@@ -49,9 +53,9 @@ def main():
     if args.output_directory is not None:
         print(f'changing output_directory {SETTINGS["output_directory"]} to {args.output_directory}')
         SETTINGS["output_directory"] = args.output_directory
-    if args.output_pdf_name is not None:
-        print(f'changing output_pdf_name {SETTINGS["output_pdf_name"]} to {args.output_pdf_name}')
-        SETTINGS["output_pdf_name"] = args.output_pdf_name
+    if args.output_filename is not None:
+        print(f'changing output_filename {SETTINGS["output_filename"]} to {args.output_filename}')
+        SETTINGS["output_filename"] = args.output_filename
     if args.filename_pattern is not None:
         print(f'changing filename_pattern {SETTINGS["filename_pattern"]} to {args.filename_pattern}')
         SETTINGS["filename_pattern"] = args.filename_pattern
@@ -74,11 +78,14 @@ def main():
 
 
     # Create a unique temporary directory
-    temp_directory = create_unique_temp_directory(SETTINGS["output_directory"], path_name, SETTINGS["filename_pattern"])
+    # temp_directory = create_unique_temp_directory(SETTINGS["output_directory"], path_name, SETTINGS["filename_pattern"])
+    temp_directory = os.path.join(SETTINGS["output_directory"], f"{SETTINGS['output_filename']}_source_files")
+    if not os.path.exists(temp_directory):
+        os.makedirs(temp_directory)
 
     # Define the name and path to the output PDF
-    if SETTINGS["output_pdf_name"] is not None:
-        output_pdf_path = os.path.join(SETTINGS["output_directory"], f"{SETTINGS['output_pdf_name'].replace('.pdf','')}.pdf")
+    if SETTINGS["output_filename"] is not None:
+        output_pdf_path = os.path.join(SETTINGS["output_directory"], f"{SETTINGS['output_filename'].replace('.pdf','')}.pdf")
     else:
         if SETTINGS["filename_pattern"] == "":
             output_pdf_path = os.path.join(SETTINGS["output_directory"], f"{path_name}_all.pdf")
@@ -116,7 +123,8 @@ def main():
     merge_temp_pdfs(temp_pdf_paths, output_pdf_path)
 
     # Remove temporaty directory with all images and pdf pages.
-    shutil.rmtree(temp_directory)
+    if not SETTINGS["keep_png_pse_files"]:
+        shutil.rmtree(temp_directory)
 
 if __name__ == "__main__":
     main()

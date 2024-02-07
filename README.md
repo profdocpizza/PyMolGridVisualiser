@@ -50,7 +50,7 @@ To quickly get started with PyMolGridVisualiser:
 
 7. Run the tool on sample PDB files:
     ```
-    python src/protein_visualiser.py examples/
+    python src/protein_visualiser.py --input_folder examples/ --output_filename example_pdbs
     ```
 8. The PDF output file will be saved in `/outputs` directory by default.
 

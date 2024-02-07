@@ -8,7 +8,8 @@ import json
 import time
 import argparse
 import pymol
-from pymol import cmd
+from pdb_to_png import generate_image_from_pdb
+
 
 # Calculate the script directory once at the module level
 script_directory = os.path.dirname(os.path.abspath(__file__))
@@ -42,7 +43,7 @@ def create_arg_parser():
     # Optional arguments
     parser.add_argument("--filename_pattern", type=str, default=None, help="Pattern to match specific PDB files.")
     parser.add_argument("--num_files", type=int, default=None, help="Number of PDB files to visualize.")
-    parser.add_argument("--output_pdf_name", type=str, default=None, help="Custom name for the output PDF.")
+    parser.add_argument("--output_filename", type=str, default=None, help="Custom name for the output PDF.")
     parser.add_argument("--grid", type=int, nargs=2, default=None, metavar=("COLUMNS", "ROWS"), help="Grid dimensions for arranging images in the PDF.")
     parser.add_argument("--write_filenames", action="store_true", default=None, help="Include the filenames in the output PDF.")
     parser.add_argument("--sort_pdbs_in_pdf", action='store_true', default=None, help="Sort PDB files alphabetically before adding to the PDF.")
@@ -61,21 +62,6 @@ def process_pdb_file( pdb_file, temp_directory, SETTINGS):
     generate_image_from_pdb(pdb_file, image_file, SETTINGS) 
     return image_file
 
-def generate_image_from_pdb(pdb_path, output_path, SETTINGS):
-    cmd.delete("all")
-    cmd.load(pdb_path,quiet=1)
-    cmd.bg_color(SETTINGS["pymol_settings"]["background_colour"])
-    cmd.hide("all")
-    cmd.show(SETTINGS["pymol_settings"]["representation"], "all")
-    if SETTINGS["pymol_settings"]["colour_spectrum"]:
-        cmd.spectrum("count", selection="all")
-    else:
-        cmd.color(SETTINGS["pymol_settings"]["colour"], "all")
-    # Disable ray tracing for faster rendering
-    cmd.png(output_path, width=SETTINGS["image_dimensions"]["width"], height=SETTINGS["image_dimensions"]["height"], ray=0, quiet=1)
-    while not os.path.exists(output_path):
-        time.sleep(0.02)
-    cmd.delete("all")
 
 
 def generate_pdf_for_pages(start, end, image_files, temp_directory, SETTINGS):
@@ -246,18 +232,3 @@ def create_unique_temp_directory(output_directory, path_name, filename_pattern):
     else:
         # Raise an error if the directory already exists
         raise FileExistsError(f"The directory {temp_directory} already exists. Please remove it manually or run the script again.")
-    
-def main():
-    parser = create_arg_parser()
-    args = parser.parse_args()
-
-    SETTINGS = load_settings(args.config)
-
-    cmd.set("ray_trace_frames", SETTINGS["pymol_settings"]["ray_trace_frames"])
-    cmd.set("ray_shadows", SETTINGS["pymol_settings"]["ray_shadows"])
-    cmd.set("antialias", SETTINGS["pymol_settings"]["antialias"])
-    cmd.set("orthoscopic", SETTINGS["pymol_settings"]["orthoscopic"])
-    cmd.set("ray_trace_mode", SETTINGS["pymol_settings"]["ray_trace_mode"])
-
-if __name__ == '__main__':
-    main()

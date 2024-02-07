@@ -16,6 +16,6 @@
 
 # Actual paths start here:
 
-/path/to/your/first/protein.pdb
-/path/to/your/second/protein.pdb
-./some/relative/path/third/protein.pdb
+/path/to/your/first_protein.pdb
+/path/to/your/second_protein.pdb
+./some/relative/path/third_protein.pdb

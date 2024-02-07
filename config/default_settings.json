@@ -1,10 +1,12 @@
 {
     "pymol_settings": {
+        "ray_tracing":0,
         "ray_trace_frames": 0,
         "ray_shadows": "off",
         "antialias": 0,
         "orthoscopic": "on",
         "ray_trace_mode":0,
+        "ray_opaque_background":0, 
         "background_colour":"white",
         "representation": "cartoon",
         "colour":"skyblue",
@@ -24,10 +26,11 @@
         "columns": 8,
         "rows": 5
     },
+    "keep_png_pse_files":true,
     "num_files": 1000,
     "write_filenames": true,
     "output_directory":"./outputs",
     "filename_pattern":"",
-    "output_pdf_name":null,
+    "output_filename":null,
     "sort_pdbs_in_pdf":false
 }
