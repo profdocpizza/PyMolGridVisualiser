@@ -2,9 +2,14 @@ from pymol import cmd
 import os
 import time
 
+
 def configure_pymol_cmd(SETTINGS):
-    cmd.set("ray_opaque_background", SETTINGS["pymol_settings"]["ray_opaque_background"]) # Tansparency of the image
-    cmd.bg_color(SETTINGS["pymol_settings"]["background_colour"]) # Background color. Overrided by ray_opaque_background
+    cmd.set(
+        "ray_opaque_background", SETTINGS["pymol_settings"]["ray_opaque_background"]
+    )  # Tansparency of the image
+    cmd.bg_color(
+        SETTINGS["pymol_settings"]["background_colour"]
+    )  # Background color. Overrided by ray_opaque_background
     cmd.set("ray_trace_frames", SETTINGS["pymol_settings"]["ray_trace_frames"])
     cmd.set("ray_shadows", SETTINGS["pymol_settings"]["ray_shadows"])
     cmd.set("antialias", SETTINGS["pymol_settings"]["antialias"])
@@ -19,6 +24,7 @@ def default_pymol_script(SETTINGS):
     else:
         cmd.color(SETTINGS["pymol_settings"]["colour"], "all")
 
+
 def cofactor_binder_pymol_script(SETTINGS):
     # This script works for proteins bound to FMN or FAD only.
     # Modify to use with other cofactors.
@@ -26,11 +32,10 @@ def cofactor_binder_pymol_script(SETTINGS):
     # Select residues FAD or FMN
     cmd.select("cofactor", "resn FAD or resn FMN")
     cmd.unbond("cofactor and elem H", "cofactor and elem C")
-    
+
     # Show selected residues as sticks with orange C-alpha atoms
     cmd.show("sticks", "cofactor")
     cmd.color("magenta", "cofactor and name CA")
-
 
     cmd.set("line_width", 5.0)
 
@@ -39,13 +44,13 @@ def cofactor_binder_pymol_script(SETTINGS):
     cmd.set("cartoon_color", "gray70")
     # cmd.color("gray70")  # Apply a base color to the protein
     cmd.set("cartoon_transparency", 0.6)
-    
+
     # Select residues within 4 Å of the cofactor
     cmd.select("near_cofactor", "byres (cofactor around 4)")
-    
+
     # Show selected nearby residues as lines
     cmd.show("lines", "near_cofactor")
-    
+
     # Label CA atoms of nearby residues
     cmd.select("near_cofactor_CA", "near_cofactor and name CA")
     cmd.label("near_cofactor_CA", "''+resn+'-'+resi+''")
@@ -57,42 +62,69 @@ def cofactor_binder_pymol_script(SETTINGS):
             cmd.delete(sele)
 
 
+def color_by_plddt(SETTINGS):
+    cmd.show(SETTINGS["pymol_settings"]["representation"], "all")
+
+    cmd.select("very_low_plddt", "all")
+    cmd.color("0xef821e", "very_low_plddt")
+
+    cmd.select("low_plddt", "b > 50")
+    cmd.color("0xf6ed12", "low_plddt")
+    cmd.select("confident_plddt", "b > 70")
+    cmd.color("0x10cff1", "confident_plddt")
+
+    cmd.select("very_high_plddt", "b > 90")
+    cmd.color("0x106dff", "very_high_plddt")
+
+    cmd.delete("very_high_plddt")
+    cmd.delete("confident_plddt")
+    cmd.delete("low_plddt")
+    cmd.delete("very_low_plddt")
+
+
 # def your_custom_pymol_script(SETTINGS):
-    # cmd.show("cartoon")
-    #
-    #
+# cmd.show("cartoon")
+#
+#
+
 
 def generate_image_from_pdb(pdb_path, output_path, SETTINGS):
     # Load the file
     cmd.delete("all")
 
-    cmd.load(pdb_path,quiet=1)
+    cmd.load(pdb_path, quiet=1)
     cmd.hide("all")
 
     #### DEFAULT SCRIPT #########
     default_pymol_script(SETTINGS)
 
+    ### COLOR BY PLDDT #####
+    # color_by_plddt(SETTINGS)
 
     ####FAD/FMN BINDER SCRIPT ####
     # cofactor_binder_pymol_script(SETTINGS)
-
 
     ####YOUR CUSTOM SCRIPT ########
     # If SETTINGS parameters are not enough, write your own custom pymol script.
     # your_custom_pymol_script(SETTINGS)
 
-
     # New functionality to save PyMOL session
-    session_path = output_path.replace('.png', '.pse')  # Assuming output_path ends with .png
+    session_path = output_path.replace(
+        ".png", ".pse"
+    )  # Assuming output_path ends with .png
     cmd.save(session_path)
     while not os.path.exists(session_path):
         time.sleep(0.02)
 
     # Save file and ensure it is written. Otherwise can write an empty file.
-    cmd.png(output_path, width=SETTINGS["image_dimensions"]["width"], height=SETTINGS["image_dimensions"]["height"], ray=SETTINGS["pymol_settings"]["ray_tracing"], quiet=1)
+    cmd.png(
+        output_path,
+        width=SETTINGS["image_dimensions"]["width"],
+        height=SETTINGS["image_dimensions"]["height"],
+        ray=SETTINGS["pymol_settings"]["ray_tracing"],
+        quiet=1,
+    )
     while not os.path.exists(output_path):
         time.sleep(0.02)
-
-
 
     cmd.delete("all")
