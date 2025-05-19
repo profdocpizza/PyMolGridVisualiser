@@ -3,7 +3,7 @@ import concurrent.futures
 import functools
 from PIL import Image
 from fpdf import FPDF
-from PyPDF2 import PdfFileMerger
+from PyPDF2 import PdfMerger
 import json
 import time
 import argparse
@@ -138,7 +138,7 @@ def split_images_for_pages(image_files, grid):
 
 def merge_temp_pdfs(temp_pdf_paths,output_pdf_path):      
     # Merge all the temporary PDFs into one
-    merger = PdfFileMerger()
+    merger = PdfMerger()
     for pdf in temp_pdf_paths:
         merger.append(pdf)
 

@@ -1,22 +1,22 @@
 {
     "pymol_settings": {
-        "ray_tracing":0,
+        "ray_tracing": 0,
         "ray_trace_frames": 0,
         "ray_shadows": "off",
         "antialias": 0,
         "orthoscopic": "on",
-        "ray_trace_mode":0,
-        "ray_opaque_background":0, 
-        "background_colour":"white",
+        "ray_trace_mode": 0,
+        "ray_opaque_background": 0,
+        "background_colour": "white",
         "representation": "cartoon",
-        "colour":"skyblue",
-        "colour_spectrum": true        
+        "colour": "skyblue",
+        "colour_spectrum": true
     },
     "pdf_settings": {
         "orientation": "L",
         "unit": "mm",
         "format": "A4",
-        "font_size_multiplier":1
+        "font_size_multiplier": 1
     },
     "image_dimensions": {
         "width": 500,
@@ -26,11 +26,11 @@
         "columns": 8,
         "rows": 5
     },
-    "keep_png_pse_files":true,
+    "keep_png_pse_files": true,
     "num_files": 1000,
     "write_filenames": true,
-    "output_directory":"./outputs",
-    "filename_pattern":"",
-    "output_filename":null,
-    "sort_pdbs_in_pdf":false
+    "output_directory": "./outputs",
+    "filename_pattern": "",
+    "output_filename": null,
+    "sort_pdbs_in_pdf": false
 }
